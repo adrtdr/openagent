@@ -6,7 +6,10 @@ import type {
 import type { ToolDefinition } from "@mariozechner/pi-coding-agent";
 import type { ClientToolDefinition } from "./pi-embedded-runner/run/params.js";
 import { logDebug, logError } from "../logger.js";
+import { getGlobalHookRunner } from "../plugins/hook-runner-global.js";
 import { isPlainObject } from "../utils.js";
+import { appendControlAuditEvent } from "./control-layer/audit-log.js";
+import { enforceToolControlPolicy } from "./control-layer/enforce.js";
 import { runBeforeToolCallHook } from "./pi-tools.before-tool-call.js";
 import { normalizeToolName } from "./tool-policy.js";
 import { jsonResult } from "./tools/common.js";
@@ -78,7 +81,10 @@ function splitToolExecuteArgs(args: ToolExecuteArgsAny): {
   };
 }
 
-export function toToolDefinitions(tools: AnyAgentTool[]): ToolDefinition[] {
+export function toToolDefinitions(
+  tools: AnyAgentTool[],
+  hookContext?: { agentId?: string; sessionKey?: string },
+): ToolDefinition[] {
   return tools.map((tool) => {
     const name = tool.name || "tool";
     const normalizedName = normalizeToolName(name);
@@ -90,7 +96,48 @@ export function toToolDefinitions(tools: AnyAgentTool[]): ToolDefinition[] {
       execute: async (...args: ToolExecuteArgs): Promise<AgentToolResult<unknown>> => {
         const { toolCallId, params, onUpdate, signal } = splitToolExecuteArgs(args);
         try {
-          return await tool.execute(toolCallId, params, signal, onUpdate);
+          // Call before_tool_call hook
+          const hookOutcome = await runBeforeToolCallHook({
+            toolName: name,
+            params,
+            toolCallId,
+          });
+          if (hookOutcome.blocked) {
+            throw new Error(hookOutcome.reason);
+          }
+          const adjustedParams = hookOutcome.params;
+          await enforceToolControlPolicy({
+            toolName: normalizedName,
+            params: adjustedParams,
+            context: hookContext,
+          });
+          const result = await tool.execute(toolCallId, adjustedParams, signal, onUpdate);
+          await appendControlAuditEvent("tool.executed", {
+            toolName: normalizedName,
+            toolCallId,
+            ok: true,
+          });
+
+          // Call after_tool_call hook
+          const hookRunner = getGlobalHookRunner();
+          if (hookRunner?.hasHooks("after_tool_call")) {
+            try {
+              await hookRunner.runAfterToolCall(
+                {
+                  toolName: name,
+                  params: isPlainObject(adjustedParams) ? adjustedParams : {},
+                  result,
+                },
+                { toolName: name },
+              );
+            } catch (hookErr) {
+              logDebug(
+                `after_tool_call hook failed: tool=${normalizedName} error=${String(hookErr)}`,
+              );
+            }
+          }
+
+          return result;
         } catch (err) {
           if (signal?.aborted) {
             throw err;
@@ -107,11 +154,40 @@ export function toToolDefinitions(tools: AnyAgentTool[]): ToolDefinition[] {
             logDebug(`tools: ${normalizedName} failed stack:\n${described.stack}`);
           }
           logError(`[tools] ${normalizedName} failed: ${described.message}`);
-          return jsonResult({
+
+          await appendControlAuditEvent("tool.executed", {
+            toolName: normalizedName,
+            toolCallId,
+            ok: false,
+            error: described.message,
+          });
+
+          const errorResult = jsonResult({
             status: "error",
             tool: normalizedName,
             error: described.message,
           });
+
+          // Call after_tool_call hook for errors too
+          const hookRunner = getGlobalHookRunner();
+          if (hookRunner?.hasHooks("after_tool_call")) {
+            try {
+              await hookRunner.runAfterToolCall(
+                {
+                  toolName: normalizedName,
+                  params: isPlainObject(params) ? params : {},
+                  error: described.message,
+                },
+                { toolName: normalizedName },
+              );
+            } catch (hookErr) {
+              logDebug(
+                `after_tool_call hook failed: tool=${normalizedName} error=${String(hookErr)}`,
+              );
+            }
+          }
+
+          return errorResult;
         }
       },
     } satisfies ToolDefinition;
@@ -145,6 +221,11 @@ export function toClientToolDefinitions(
           throw new Error(outcome.reason);
         }
         const adjustedParams = outcome.params;
+        await enforceToolControlPolicy({
+          toolName: normalizeToolName(func.name),
+          params: adjustedParams,
+          context: hookContext,
+        });
         const paramsRecord = isPlainObject(adjustedParams) ? adjustedParams : {};
         // Notify handler that a client tool was called
         if (onClientToolCall) {

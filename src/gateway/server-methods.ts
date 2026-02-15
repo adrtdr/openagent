@@ -7,6 +7,7 @@ import { channelsHandlers } from "./server-methods/channels.js";
 import { chatHandlers } from "./server-methods/chat.js";
 import { configHandlers } from "./server-methods/config.js";
 import { connectHandlers } from "./server-methods/connect.js";
+import { controlLayerHandlers } from "./server-methods/control-layer.js";
 import { cronHandlers } from "./server-methods/cron.js";
 import { deviceHandlers } from "./server-methods/devices.js";
 import { execApprovalsHandlers } from "./server-methods/exec-approvals.js";
@@ -32,7 +33,12 @@ const WRITE_SCOPE = "operator.write";
 const APPROVALS_SCOPE = "operator.approvals";
 const PAIRING_SCOPE = "operator.pairing";
 
-const APPROVAL_METHODS = new Set(["exec.approval.request", "exec.approval.resolve"]);
+const APPROVAL_METHODS = new Set([
+  "exec.approval.request",
+  "exec.approval.resolve",
+  "approvals.decide",
+  "approvals.revokeGrant",
+]);
 const NODE_ROLE_METHODS = new Set(["node.invoke.result", "node.event", "skills.bins"]);
 const PAIRING_METHODS = new Set([
   "node.pair.request",
@@ -58,6 +64,16 @@ const READ_METHODS = new Set([
   "tts.status",
   "tts.providers",
   "models.list",
+  "approvals.list",
+  "approvals.get",
+  "audit.query",
+  "audit.get",
+  "audit.export",
+  "audit.verify",
+  "capabilities.list",
+  "capabilities.get",
+  "runtime.snapshot",
+  "runtime.logs.tail",
   "agents.list",
   "agent.identity.get",
   "skills.status",
@@ -72,6 +88,7 @@ const READ_METHODS = new Set([
   "node.list",
   "node.describe",
   "chat.history",
+  "config.validate",
 ]);
 const WRITE_METHODS = new Set([
   "send",
@@ -88,6 +105,8 @@ const WRITE_METHODS = new Set([
   "chat.send",
   "chat.abort",
   "browser.request",
+  "runtime.logs.stop",
+  "capabilities.reload",
 ]);
 
 function authorizeGatewayMethod(method: string, client: GatewayRequestOptions["client"]) {
@@ -175,6 +194,7 @@ export const coreGatewayHandlers: GatewayRequestHandlers = {
   ...webHandlers,
   ...modelsHandlers,
   ...configHandlers,
+  ...controlLayerHandlers,
   ...wizardHandlers,
   ...talkHandlers,
   ...ttsHandlers,

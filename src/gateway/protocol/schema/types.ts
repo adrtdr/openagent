@@ -51,6 +51,23 @@ import type {
   UpdateRunParamsSchema,
 } from "./config.js";
 import type {
+  ApprovalsDecideParamsSchema,
+  ApprovalsGetParamsSchema,
+  ApprovalsListParamsSchema,
+  ApprovalsRevokeGrantParamsSchema,
+  AuditExportParamsSchema,
+  AuditGetParamsSchema,
+  AuditQueryParamsSchema,
+  AuditVerifyParamsSchema,
+  CapabilitiesGetParamsSchema,
+  CapabilitiesListParamsSchema,
+  CapabilitiesReloadParamsSchema,
+  ConfigValidateParamsSchema,
+  RuntimeLogsStopParamsSchema,
+  RuntimeLogsTailParamsSchema,
+  RuntimeSnapshotParamsSchema,
+} from "./control-layer.js";
+import type {
   CronAddParamsSchema,
   CronJobSchema,
   CronListParamsSchema,
@@ -171,6 +188,21 @@ export type ConfigApplyParams = Static<typeof ConfigApplyParamsSchema>;
 export type ConfigPatchParams = Static<typeof ConfigPatchParamsSchema>;
 export type ConfigSchemaParams = Static<typeof ConfigSchemaParamsSchema>;
 export type ConfigSchemaResponse = Static<typeof ConfigSchemaResponseSchema>;
+export type ConfigValidateParams = Static<typeof ConfigValidateParamsSchema>;
+export type ApprovalsListParams = Static<typeof ApprovalsListParamsSchema>;
+export type ApprovalsGetParams = Static<typeof ApprovalsGetParamsSchema>;
+export type ApprovalsDecideParams = Static<typeof ApprovalsDecideParamsSchema>;
+export type ApprovalsRevokeGrantParams = Static<typeof ApprovalsRevokeGrantParamsSchema>;
+export type AuditQueryParams = Static<typeof AuditQueryParamsSchema>;
+export type AuditGetParams = Static<typeof AuditGetParamsSchema>;
+export type AuditExportParams = Static<typeof AuditExportParamsSchema>;
+export type AuditVerifyParams = Static<typeof AuditVerifyParamsSchema>;
+export type CapabilitiesListParams = Static<typeof CapabilitiesListParamsSchema>;
+export type CapabilitiesGetParams = Static<typeof CapabilitiesGetParamsSchema>;
+export type CapabilitiesReloadParams = Static<typeof CapabilitiesReloadParamsSchema>;
+export type RuntimeSnapshotParams = Static<typeof RuntimeSnapshotParamsSchema>;
+export type RuntimeLogsTailParams = Static<typeof RuntimeLogsTailParamsSchema>;
+export type RuntimeLogsStopParams = Static<typeof RuntimeLogsStopParamsSchema>;
 export type WizardStartParams = Static<typeof WizardStartParamsSchema>;
 export type WizardNextParams = Static<typeof WizardNextParamsSchema>;
 export type WizardCancelParams = Static<typeof WizardCancelParamsSchema>;

@@ -68,6 +68,36 @@ import {
   ConfigSchemaResponseSchema,
   type ConfigSetParams,
   ConfigSetParamsSchema,
+  type ConfigValidateParams,
+  ConfigValidateParamsSchema,
+  type ApprovalsListParams,
+  ApprovalsListParamsSchema,
+  type ApprovalsGetParams,
+  ApprovalsGetParamsSchema,
+  type ApprovalsDecideParams,
+  ApprovalsDecideParamsSchema,
+  type ApprovalsRevokeGrantParams,
+  ApprovalsRevokeGrantParamsSchema,
+  type AuditQueryParams,
+  AuditQueryParamsSchema,
+  type AuditGetParams,
+  AuditGetParamsSchema,
+  type AuditExportParams,
+  AuditExportParamsSchema,
+  type AuditVerifyParams,
+  AuditVerifyParamsSchema,
+  type CapabilitiesListParams,
+  CapabilitiesListParamsSchema,
+  type CapabilitiesGetParams,
+  CapabilitiesGetParamsSchema,
+  type CapabilitiesReloadParams,
+  CapabilitiesReloadParamsSchema,
+  type RuntimeSnapshotParams,
+  RuntimeSnapshotParamsSchema,
+  type RuntimeLogsTailParams,
+  RuntimeLogsTailParamsSchema,
+  type RuntimeLogsStopParams,
+  RuntimeLogsStopParamsSchema,
   type ConnectParams,
   ConnectParamsSchema,
   type CronAddParams,
@@ -295,6 +325,40 @@ export const validateConfigSetParams = ajv.compile<ConfigSetParams>(ConfigSetPar
 export const validateConfigApplyParams = ajv.compile<ConfigApplyParams>(ConfigApplyParamsSchema);
 export const validateConfigPatchParams = ajv.compile<ConfigPatchParams>(ConfigPatchParamsSchema);
 export const validateConfigSchemaParams = ajv.compile<ConfigSchemaParams>(ConfigSchemaParamsSchema);
+export const validateConfigValidateParams = ajv.compile<ConfigValidateParams>(
+  ConfigValidateParamsSchema,
+);
+export const validateApprovalsListParams =
+  ajv.compile<ApprovalsListParams>(ApprovalsListParamsSchema);
+export const validateApprovalsGetParams = ajv.compile<ApprovalsGetParams>(ApprovalsGetParamsSchema);
+export const validateApprovalsDecideParams = ajv.compile<ApprovalsDecideParams>(
+  ApprovalsDecideParamsSchema,
+);
+export const validateApprovalsRevokeGrantParams = ajv.compile<ApprovalsRevokeGrantParams>(
+  ApprovalsRevokeGrantParamsSchema,
+);
+export const validateAuditQueryParams = ajv.compile<AuditQueryParams>(AuditQueryParamsSchema);
+export const validateAuditGetParams = ajv.compile<AuditGetParams>(AuditGetParamsSchema);
+export const validateAuditExportParams = ajv.compile<AuditExportParams>(AuditExportParamsSchema);
+export const validateAuditVerifyParams = ajv.compile<AuditVerifyParams>(AuditVerifyParamsSchema);
+export const validateCapabilitiesListParams = ajv.compile<CapabilitiesListParams>(
+  CapabilitiesListParamsSchema,
+);
+export const validateCapabilitiesGetParams = ajv.compile<CapabilitiesGetParams>(
+  CapabilitiesGetParamsSchema,
+);
+export const validateCapabilitiesReloadParams = ajv.compile<CapabilitiesReloadParams>(
+  CapabilitiesReloadParamsSchema,
+);
+export const validateRuntimeSnapshotParams = ajv.compile<RuntimeSnapshotParams>(
+  RuntimeSnapshotParamsSchema,
+);
+export const validateRuntimeLogsTailParams = ajv.compile<RuntimeLogsTailParams>(
+  RuntimeLogsTailParamsSchema,
+);
+export const validateRuntimeLogsStopParams = ajv.compile<RuntimeLogsStopParams>(
+  RuntimeLogsStopParamsSchema,
+);
 export const validateWizardStartParams = ajv.compile<WizardStartParams>(WizardStartParamsSchema);
 export const validateWizardNextParams = ajv.compile<WizardNextParams>(WizardNextParamsSchema);
 export const validateWizardCancelParams = ajv.compile<WizardCancelParams>(WizardCancelParamsSchema);
