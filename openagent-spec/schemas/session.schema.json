@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Session",
+  "type": "object",
+  "required": [
+    "sessionId",
+    "createdAt",
+    "workspaceId",
+    "policyRef"
+  ],
+  "properties": {
+    "sessionId": {
+      "type": "string"
+    },
+    "createdAt": {
+      "type": "string"
+    },
+    "workspaceId": {
+      "type": "string"
+    },
+    "policyRef": {
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": true
+}

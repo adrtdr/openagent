@@ -1,0 +1,21 @@
+sequenceDiagram
+  participant C as Client/UI
+  participant G as Gateway
+  participant A as Agent Runner
+  participant P as Policy Engine
+  participant T as Tool Executor
+
+  C->>G: agent.run(message)
+  G->>A: start run
+  A->>P: evaluate(toolCall)
+  P-->>A: REQUIRE_CONFIRMATION
+  A->>G: emit approval.requested(approvalId)
+  G-->>C: event:approval.requested
+
+  C->>G: approval.decide(approve + optional edits)
+  G->>P: validate decision + scope
+  G->>A: resume run with approval token
+  A->>T: execute(toolCall + token)
+  T-->>A: result
+  A-->>G: stream tool + assistant
+  G-->>C: events streamed

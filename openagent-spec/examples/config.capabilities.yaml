@@ -1,0 +1,28 @@
+# Minimal capability manifest (example)
+capabilities:
+  - id: "fs.read"
+    category: "fs"
+    riskTier: "R1"
+    sideEffects: false
+    dataAccess: ["files"]
+
+  - id: "fs.write"
+    category: "fs"
+    riskTier: "R2"
+    sideEffects: true
+    dataAccess: ["files"]
+    redaction: ["content"]
+
+  - id: "system.run"
+    category: "system"
+    riskTier: "R3"
+    sideEffects: true
+    dataAccess: ["process"]
+    redaction: ["env", "stdin"]
+
+  - id: "http.request"
+    category: "network"
+    riskTier: "R3"
+    sideEffects: true
+    dataAccess: ["network"]
+    redaction: ["headers.authorization"]

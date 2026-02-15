@@ -1,0 +1,137 @@
+# Work backlog for OpenAgent (OpenClaw fork) — Codex-ready
+epics:
+  - id: F0
+    name: Pin upstream baseline + keep fork mergeable
+    items:
+      - id: F0.1
+        title: Add upstream remote (openclaw/openclaw), fetch tags, pin stable tag (>= v2026.2.12)
+        acceptance:
+          - Record pinned tag and commit hash in CHANGELOG or release notes
+          - Baseline tests pass (or failures documented as upstream)
+      - id: F0.2
+        title: Create baseline/<TAG> branch and long-lived openagent/main integration branch
+        acceptance:
+          - openagent/main is mergeable with upstream
+          - CI runs on openagent/main
+
+  - id: F1
+    name: Rename + compatibility (OpenClaw → OpenAgent)
+    items:
+      - id: F1.1
+        title: Introduce openagent CLI entry point (openagent.mjs) and package.json bin mapping
+        acceptance:
+          - `openagent --help` works
+          - `openagent gateway --help` works
+      - id: F1.2
+        title: Implement state/config migration (~/.openclaw → ~/.openagent) + marker + tests
+        acceptance:
+          - Migration copies data and verifies (idempotent)
+          - Second run is no-op
+      - id: F1.3
+        title: Env var compatibility layer (OPENAGENT_* primary; OPENCLAW_* aliases)
+        acceptance:
+          - Alias works
+          - Warn once per process
+      - id: F1.4
+        title: Optional openclaw CLI shim forwarding to openagent
+        acceptance:
+          - `openclaw` prints deprecation warning and forwards correctly
+
+  - id: C1
+    name: Control layer (capabilities + policy + approvals)
+    items:
+      - id: C1.1
+        title: Capability registry for tools/executors (risk + scopes + redaction)
+        acceptance:
+          - Core tools registered with risk tier + scopes + redaction rules
+      - id: C1.2
+        title: Deny-by-default policy evaluator + rationale trace
+        acceptance:
+          - Deterministic decisions
+          - Trace serializable and UI-friendly
+      - id: C1.3
+        title: Approval request lifecycle + token binding + scoped grants
+        acceptance:
+          - Token single-use
+          - Hash-bound to canonical tool call
+          - Expiry enforced
+          - Replay fails
+      - id: C1.4
+        title: Integrate gating into agent runtime tool execution path
+        acceptance:
+          - High-risk tool calls cannot execute without approval
+          - Streaming remains intact for safe actions
+
+  - id: A1
+    name: Audit logging (tamper-evident)
+    items:
+      - id: A1.1
+        title: Emit audit events for proposals/decisions/approvals/executions
+        acceptance:
+          - JSONL lines are append-only
+      - id: A1.2
+        title: Hash-chain verifier + indexes
+        acceptance:
+          - Verifier detects tampering
+
+  - id: G1
+    name: Gateway WS API extensions for Studio
+    items:
+      - id: G1.1
+        title: Implement config.get/config.patch/config.validate
+        acceptance:
+          - Returns effective config + sources
+          - Patch validates and reloads or reports restart-required
+      - id: G1.2
+        title: Implement approvals.* API + events
+        acceptance:
+          - UI can approve/deny in real time
+      - id: G1.3
+        title: Implement audit.* API + events + export/verify
+        acceptance:
+          - UI can query and export audits
+      - id: G1.4
+        title: Implement runtime.snapshot + logs tail
+        acceptance:
+          - UI can show run state and recent logs
+
+  - id: U1
+    name: OpenAgent Studio UI (/studio)
+    items:
+      - id: U1.1
+        title: Create SPA scaffold + WS client + typed frames
+        acceptance:
+          - Connects to gateway and renders chat
+      - id: U1.2
+        title: Approvals inbox UI
+        acceptance:
+          - Approve/deny flow works end-to-end
+      - id: U1.3
+        title: Audit explorer UI (query + export + verify)
+        acceptance:
+          - Filters and detail view work
+      - id: U1.4
+        title: Settings/config UI (schema-driven forms)
+        acceptance:
+          - Config edits validate and apply with reload feedback
+      - id: U1.5
+        title: Runtime status inspector
+        acceptance:
+          - Shows gateway/agent/nodes/sessions/providers status
+
+  - id: T1
+    name: Testing + parity
+    items:
+      - id: T1.1
+        title: Integration tests for approval gating + replay protection
+        acceptance:
+          - Replay fails
+          - Arg change fails
+      - id: T1.2
+        title: Migration tests for ~/.openclaw → ~/.openagent
+        acceptance:
+          - No data loss
+      - id: T1.3
+        title: Parity matrix and regression checks against upstream baseline
+        acceptance:
+          - Documented feature parity and intentional changes

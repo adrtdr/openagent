@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CapabilityManifestEntry",
+  "type": "object",
+  "required": [
+    "id",
+    "category",
+    "riskTier",
+    "sideEffects"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string"
+    },
+    "riskTier": {
+      "enum": [
+        "R0",
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ]
+    },
+    "sideEffects": {
+      "type": "boolean"
+    },
+    "dataAccess": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "requires": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "defaultPolicy": {
+      "enum": [
+        "allow",
+        "deny",
+        "confirm"
+      ]
+    },
+    "redaction": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "rateLimits": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,25 @@
+flowchart LR
+  subgraph Channels
+    WA[WhatsApp] --> CH[Channel Adapter]
+    TG[Telegram] --> CH
+    SL[Slack] --> CH
+  end
+
+  CH -->|message.received| GW[Gateway WS Control Plane]
+
+  subgraph Gateway
+    GW --> AR[Agent Runner]
+    AR --> PE[Policy Engine]
+    PE -->|ALLOW| TR[Tool Router]
+    PE -->|REQUIRE_CONFIRMATION| CS[Confirmation Service]
+    CS --> UI[Operator UI/CLI]
+    UI -->|approve/deny| CS
+    CS --> TR
+    TR --> AE[Audit Logger]
+    AR --> AE
+  end
+
+  TR --> ND[Nodes (device endpoints)]
+  TR --> EX[Executors (fs/http/browser/shell)]
+  ND --> AE
+  EX --> AE

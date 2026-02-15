@@ -1,0 +1,21 @@
+# KoraClaw Gateway configuration (example)
+gateway:
+  bind: "127.0.0.1"
+  port: 18789
+  auth:
+    mode: "token"          # token | oidc | mtls
+    tokenEnv: "KORACLAW_GATEWAY_TOKEN"
+  pairing:
+    requirePairing: true
+    autoApproveLoopback: true
+  stateDir: "~/.koraclaw"
+  lanes:
+    perSession: true
+    globalHighRiskLane: true
+  audit:
+    sqlitePath: "~/.koraclaw/audit.db"
+    jsonlPath: "~/.koraclaw/audit.jsonl"
+    hashChain: true
+  ui:
+    enabled: true
+    allowInsecureAuth: false

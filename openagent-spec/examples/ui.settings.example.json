@@ -1,0 +1,12 @@
+{
+  "theme": "dark",
+  "compactMode": false,
+  "showToolArgsByDefault": true,
+  "redactionLevel": "standard",
+  "autoScroll": true,
+  "timezone": "Europe/Bucharest",
+  "dangerZone": {
+    "allowRevealSecrets": false,
+    "allowExportAudit": true
+  }
+}

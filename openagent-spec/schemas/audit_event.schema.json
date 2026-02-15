@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AuditEvent",
+  "type": "object",
+  "required": [
+    "eventId",
+    "ts",
+    "type",
+    "principal",
+    "decision",
+    "hash",
+    "prevHash"
+  ],
+  "properties": {
+    "eventId": {
+      "type": "string"
+    },
+    "ts": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string"
+    },
+    "principal": {
+      "type": "object"
+    },
+    "sessionId": {
+      "type": "string"
+    },
+    "runId": {
+      "type": "string"
+    },
+    "action": {
+      "type": "string"
+    },
+    "resource": {
+      "type": "string"
+    },
+    "decision": {
+      "type": "string"
+    },
+    "reason": {
+      "type": "string"
+    },
+    "payload": {
+      "type": "object"
+    },
+    "prevHash": {
+      "type": "string"
+    },
+    "hash": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": true
+}

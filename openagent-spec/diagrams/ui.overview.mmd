@@ -1,0 +1,29 @@
+%% OpenAgent Studio UI Overview
+flowchart LR
+  subgraph Browser["OpenAgent Studio (Browser)"]
+    Chat["Chat (stream)"]
+    Approvals["Approvals Inbox"]
+    Audit["Audit Explorer"]
+    Settings["Settings / Config"]
+    Status["Run State Inspector"]
+  end
+
+  subgraph Gateway["OpenAgent Gateway (WS)"]
+    WS["WebSocket Server"]
+    Policy["Policy Engine"]
+    Approver["Approval Service"]
+    AuditSvc["Audit Service"]
+    Agent["Agent Runner"]
+    Tools["Tool Router / Executors"]
+  end
+
+  Chat -->|chat.send / agent| WS
+  WS --> Agent
+  Agent -->|tool proposal| Policy
+  Policy -->|require confirm| Approver
+  Approver -->|approval.requested event| Approvals
+  Approvals -->|approvals.decide| WS
+  WS -->|audit events| Audit
+  Settings -->|config.get / config.patch| WS
+  Status -->|health / runtime.snapshot| WS
+  Agent --> Tools --> AuditSvc

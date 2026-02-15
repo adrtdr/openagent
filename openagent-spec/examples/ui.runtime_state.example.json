@@ -1,0 +1,33 @@
+{
+  "connection": {
+    "connected": true,
+    "latencyMs": 42,
+    "authMode": "token",
+    "clientId": "studio-01"
+  },
+  "sessions": [
+    {
+      "id": "main",
+      "title": "Main",
+      "lastActivity": "2026-02-05T10:00:00Z"
+    }
+  ],
+  "selectedSessionId": "main",
+  "pendingApprovals": [
+    {
+      "id": "appr_123",
+      "sessionId": "main",
+      "tool": "system.run",
+      "riskTier": "high",
+      "status": "pending"
+    }
+  ],
+  "selectedApprovalId": "appr_123",
+  "runtime": {
+    "gateway": {
+      "uptimeSeconds": 3600,
+      "version": "openagent-dev"
+    },
+    "nodes": []
+  }
+}

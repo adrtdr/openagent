@@ -1,0 +1,19 @@
+{
+  "approvalId": "appr_123",
+  "sessionId": "sess_abc",
+  "runId": "run_001",
+  "toolCallCanonical": {
+    "toolId": "system.run",
+    "args": {
+      "cmd": "ls -la",
+      "cwd": "/home/adrian/projects"
+    },
+    "riskTier": "R3"
+  },
+  "toolCallHash": "<sha256>",
+  "humanSummary": "Run a shell listing of /home/adrian/projects to inspect files.",
+  "riskTier": "R3",
+  "requestedAt": "2026-02-05T00:00:00Z",
+  "expiresAt": "2026-02-05T00:05:00Z",
+  "status": "pending"
+}

@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GatewayFrame",
+  "type": "object",
+  "required": [
+    "type"
+  ],
+  "properties": {
+    "type": {
+      "enum": [
+        "req",
+        "res",
+        "event"
+      ]
+    },
+    "id": {
+      "type": "string"
+    },
+    "method": {
+      "type": "string"
+    },
+    "params": {
+      "type": "object"
+    },
+    "ok": {
+      "type": "boolean"
+    },
+    "payload": {
+      "type": "object"
+    },
+    "error": {
+      "type": "object"
+    },
+    "event": {
+      "type": "string"
+    },
+    "seq": {
+      "type": "integer"
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,15 @@
+erDiagram
+  SESSIONS ||--o{ AGENT_RUNS : has
+  AGENT_RUNS ||--o{ TOOL_CALLS : proposes
+  TOOL_CALLS ||--o{ APPROVALS : requires
+  TOOL_CALLS ||--o{ AUDIT_EVENTS : emits
+  APPROVALS ||--o{ AUDIT_EVENTS : emits
+
+  AUDIT_EVENTS {
+    string eventId
+    string ts
+    string type
+    string decision
+    string prevHash
+    string hash
+  }

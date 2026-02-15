@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GatewayMethods",
+  "type": "object",
+  "description": "Minimal method catalog (expand as implementation grows).",
+  "properties": {
+    "agent.run": {
+      "type": "object"
+    },
+    "node.invoke": {
+      "type": "object"
+    },
+    "approval.decide": {
+      "type": "object"
+    },
+    "audit.query": {
+      "type": "object"
+    },
+    "config.get": {
+      "type": "object"
+    },
+    "config.patch": {
+      "type": "object"
+    },
+    "config.validate": {
+      "type": "object"
+    },
+    "approvals.list": {
+      "type": "object"
+    },
+    "approvals.get": {
+      "type": "object"
+    },
+    "approvals.decide": {
+      "type": "object"
+    },
+    "approvals.revokeGrant": {
+      "type": "object"
+    },
+    "audit.get": {
+      "type": "object"
+    },
+    "audit.export": {
+      "type": "object"
+    },
+    "audit.verify": {
+      "type": "object"
+    },
+    "capabilities.list": {
+      "type": "object"
+    },
+    "capabilities.get": {
+      "type": "object"
+    },
+    "capabilities.reload": {
+      "type": "object"
+    },
+    "runtime.snapshot": {
+      "type": "object"
+    },
+    "runtime.logs.tail": {
+      "type": "object"
+    },
+    "runtime.logs.stop": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": true
+}

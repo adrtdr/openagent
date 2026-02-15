@@ -1,0 +1,9 @@
+# Channels are optional; this is an example layout.
+channels:
+  telegram:
+    enabled: true
+    botTokenRef: "secret:global/telegram/bot_token"
+    dmPolicy: "pairing"      # pairing | open
+    allowFrom: []            # populated via pairing approval
+  slack:
+    enabled: false

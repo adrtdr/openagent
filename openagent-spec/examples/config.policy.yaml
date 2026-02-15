@@ -1,0 +1,36 @@
+version: "1.0"
+defaults:
+  denyByDefault: true
+  riskTierConfirmAtOrAbove: "R3"
+
+rules:
+  - id: "allow-readonly-workspace"
+    when:
+      toolId: "fs.read"
+      pathPrefix: "$WORKSPACE_ROOT"
+    then:
+      decision: "ALLOW"
+
+  - id: "confirm-write-outside-workspace"
+    when:
+      toolId: "fs.write"
+      pathNotPrefix: "$WORKSPACE_ROOT"
+    then:
+      decision: "REQUIRE_CONFIRMATION"
+      level: "strong"
+      suggestedScope: "once"
+
+  - id: "always-confirm-shell"
+    when:
+      toolId: "system.run"
+    then:
+      decision: "REQUIRE_CONFIRMATION"
+      level: "strong"
+      suggestedScope: "once"
+
+  - id: "deny-unknown-channel-operator-actions"
+    when:
+      channelTrust: "unknown"
+      action: "approval.decide"
+    then:
+      decision: "DENY"
