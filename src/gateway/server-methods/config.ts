@@ -149,7 +149,7 @@ export const configHandlers: GatewayRequestHandlers = {
     });
     respond(true, schema, undefined);
   },
-  "config.set": async ({ params, respond }) => {
+  "config.set": async ({ params, respond, context }) => {
     if (!validateConfigSetParams(params)) {
       respond(
         false,
@@ -205,6 +205,7 @@ export const configHandlers: GatewayRequestHandlers = {
       return;
     }
     await writeConfigFile(restored);
+    context.broadcast("config", { action: "set" }, { dropIfSlow: true });
     respond(
       true,
       {
@@ -215,7 +216,7 @@ export const configHandlers: GatewayRequestHandlers = {
       undefined,
     );
   },
-  "config.patch": async ({ params, respond }) => {
+  "config.patch": async ({ params, respond, context }) => {
     if (!validateConfigPatchParams(params)) {
       respond(
         false,
@@ -331,6 +332,7 @@ export const configHandlers: GatewayRequestHandlers = {
       delayMs: restartDelayMs,
       reason: "config.patch",
     });
+    context.broadcast("config", { action: "patch" }, { dropIfSlow: true });
     respond(
       true,
       {
@@ -346,7 +348,7 @@ export const configHandlers: GatewayRequestHandlers = {
       undefined,
     );
   },
-  "config.apply": async ({ params, respond }) => {
+  "config.apply": async ({ params, respond, context }) => {
     if (!validateConfigApplyParams(params)) {
       respond(
         false,
@@ -442,6 +444,7 @@ export const configHandlers: GatewayRequestHandlers = {
       delayMs: restartDelayMs,
       reason: "config.apply",
     });
+    context.broadcast("config", { action: "apply" }, { dropIfSlow: true });
     respond(
       true,
       {

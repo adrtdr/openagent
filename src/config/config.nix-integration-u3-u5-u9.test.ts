@@ -35,10 +35,10 @@ describe("Nix integration (U3, U5, U9)", () => {
   });
 
   describe("U5: CONFIG_PATH and STATE_DIR env var overrides", () => {
-    it("STATE_DIR defaults to ~/.openclaw when env not set", async () => {
+    it("STATE_DIR defaults to ~/.openagent when env not set", async () => {
       await withEnvOverride({ OPENCLAW_STATE_DIR: undefined }, async () => {
         const { STATE_DIR } = await import("./config.js");
-        expect(STATE_DIR).toMatch(/\.openclaw$/);
+        expect(STATE_DIR).toMatch(/\.openagent$/);
       });
     });
 
@@ -55,12 +55,12 @@ describe("Nix integration (U3, U5, U9)", () => {
         { OPENCLAW_HOME: customHome, OPENCLAW_STATE_DIR: undefined },
         async () => {
           const { STATE_DIR } = await import("./config.js");
-          expect(STATE_DIR).toBe(path.join(path.resolve(customHome), ".openclaw"));
+          expect(STATE_DIR).toBe(path.join(path.resolve(customHome), ".openagent"));
         },
       );
     });
 
-    it("CONFIG_PATH defaults to OPENCLAW_HOME/.openclaw/openclaw.json", async () => {
+    it("CONFIG_PATH defaults to OPENCLAW_HOME/.openagent/openagent.json", async () => {
       const customHome = path.join(path.sep, "custom", "home");
       await withEnvOverride(
         {
@@ -71,18 +71,18 @@ describe("Nix integration (U3, U5, U9)", () => {
         async () => {
           const { CONFIG_PATH } = await import("./config.js");
           expect(CONFIG_PATH).toBe(
-            path.join(path.resolve(customHome), ".openclaw", "openclaw.json"),
+            path.join(path.resolve(customHome), ".openagent", "openagent.json"),
           );
         },
       );
     });
 
-    it("CONFIG_PATH defaults to ~/.openclaw/openclaw.json when env not set", async () => {
+    it("CONFIG_PATH defaults to ~/.openagent/openagent.json when env not set", async () => {
       await withEnvOverride(
         { OPENCLAW_CONFIG_PATH: undefined, OPENCLAW_STATE_DIR: undefined },
         async () => {
           const { CONFIG_PATH } = await import("./config.js");
-          expect(CONFIG_PATH).toMatch(/\.openclaw[\\/]openclaw\.json$/);
+          expect(CONFIG_PATH).toMatch(/\.openagent[\\/]openagent\.json$/);
         },
       );
     });
@@ -111,7 +111,7 @@ describe("Nix integration (U3, U5, U9)", () => {
         },
         async () => {
           const { CONFIG_PATH } = await import("./config.js");
-          expect(CONFIG_PATH).toBe(path.join(path.resolve("/custom/state"), "openclaw.json"));
+          expect(CONFIG_PATH).toBe(path.join(path.resolve("/custom/state"), "openagent.json"));
         },
       );
     });

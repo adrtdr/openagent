@@ -15,6 +15,17 @@ const resolvePinnedHostname = ssrf.resolvePinnedHostname;
 const lookupMock = vi.fn();
 let resolvePinnedHostnameSpy: ReturnType<typeof vi.spyOn> = null;
 
+const sleep = async (ms: number) => {
+  await new Promise<void>((resolve) => setTimeout(resolve, ms));
+};
+
+const waitForMockCallCount = async (mock: ReturnType<typeof vi.fn>, expectedCalls: number) => {
+  const deadline = Date.now() + 5_000;
+  while (mock.mock.calls.length < expectedCalls && Date.now() < deadline) {
+    await sleep(25);
+  }
+};
+
 type ApiStub = {
   config: { use: (arg: unknown) => void };
   sendChatAction: typeof sendChatActionSpy;
@@ -285,12 +296,8 @@ describe("telegram inbound media", () => {
 });
 
 describe("telegram media groups", () => {
-  beforeEach(() => {
-    vi.useFakeTimers();
-  });
-
   afterEach(() => {
-    vi.useRealTimers();
+    vi.clearAllTimers();
   });
 
   const MEDIA_GROUP_TEST_TIMEOUT_MS = process.platform === "win32" ? 45_000 : 20_000;
@@ -359,8 +366,9 @@ describe("telegram media groups", () => {
       await second;
 
       expect(replySpy).not.toHaveBeenCalled();
-      await vi.advanceTimersByTimeAsync(MEDIA_GROUP_FLUSH_MS);
+      await sleep(MEDIA_GROUP_FLUSH_MS);
 
+      await waitForMockCallCount(replySpy, 1);
       expect(runtimeError).not.toHaveBeenCalled();
       expect(replySpy).toHaveBeenCalledTimes(1);
       const payload = replySpy.mock.calls[0][0];
@@ -425,8 +433,9 @@ describe("telegram media groups", () => {
       await Promise.all([first, second]);
 
       expect(replySpy).not.toHaveBeenCalled();
-      await vi.advanceTimersByTimeAsync(MEDIA_GROUP_FLUSH_MS);
+      await sleep(MEDIA_GROUP_FLUSH_MS);
 
+      await waitForMockCallCount(replySpy, 2);
       expect(replySpy).toHaveBeenCalledTimes(2);
 
       fetchSpy.mockRestore();
@@ -501,6 +510,7 @@ describe("telegram stickers", () => {
         getFile: async () => ({ file_path: "stickers/sticker.webp" }),
       });
 
+      await waitForMockCallCount(replySpy, 1);
       expect(runtimeError).not.toHaveBeenCalled();
       expect(fetchSpy).toHaveBeenCalledWith(
         "https://api.telegram.org/file/bottok/stickers/sticker.webp",
@@ -721,12 +731,8 @@ describe("telegram stickers", () => {
 });
 
 describe("telegram text fragments", () => {
-  beforeEach(() => {
-    vi.useFakeTimers();
-  });
-
   afterEach(() => {
-    vi.useRealTimers();
+    vi.clearAllTimers();
   });
 
   const TEXT_FRAGMENT_TEST_TIMEOUT_MS = process.platform === "win32" ? 45_000 : 20_000;
@@ -774,7 +780,7 @@ describe("telegram text fragments", () => {
       });
 
       expect(replySpy).not.toHaveBeenCalled();
-      await vi.advanceTimersByTimeAsync(TEXT_FRAGMENT_FLUSH_MS);
+      await sleep(TEXT_FRAGMENT_FLUSH_MS);
 
       expect(replySpy).toHaveBeenCalledTimes(1);
       const payload = replySpy.mock.calls[0][0] as { RawBody?: string; Body?: string };

@@ -36,9 +36,9 @@ describe("oauth paths", () => {
 });
 
 describe("state + config path candidates", () => {
-  it("uses OPENCLAW_STATE_DIR when set", () => {
+  it("uses OPENAGENT_STATE_DIR when set", () => {
     const env = {
-      OPENCLAW_STATE_DIR: "/new/state",
+      OPENAGENT_STATE_DIR: "/new/state",
     } as NodeJS.ProcessEnv;
 
     expect(resolveStateDir(env, () => "/home/test")).toBe(path.resolve("/new/state"));
@@ -50,10 +50,10 @@ describe("state + config path candidates", () => {
     } as NodeJS.ProcessEnv;
 
     const resolvedHome = path.resolve("/srv/openclaw-home");
-    expect(resolveStateDir(env)).toBe(path.join(resolvedHome, ".openclaw"));
+    expect(resolveStateDir(env)).toBe(path.join(resolvedHome, ".openagent"));
 
     const candidates = resolveDefaultConfigCandidates(env);
-    expect(candidates[0]).toBe(path.join(resolvedHome, ".openclaw", "openclaw.json"));
+    expect(candidates[0]).toBe(path.join(resolvedHome, ".openagent", "openagent.json"));
   });
 
   it("prefers OPENCLAW_HOME over HOME for default state/config locations", () => {
@@ -63,10 +63,10 @@ describe("state + config path candidates", () => {
     } as NodeJS.ProcessEnv;
 
     const resolvedHome = path.resolve("/srv/openclaw-home");
-    expect(resolveStateDir(env)).toBe(path.join(resolvedHome, ".openclaw"));
+    expect(resolveStateDir(env)).toBe(path.join(resolvedHome, ".openagent"));
 
     const candidates = resolveDefaultConfigCandidates(env);
-    expect(candidates[0]).toBe(path.join(resolvedHome, ".openclaw", "openclaw.json"));
+    expect(candidates[0]).toBe(path.join(resolvedHome, ".openagent", "openagent.json"));
   });
 
   it("orders default config candidates in a stable order", () => {
@@ -74,18 +74,27 @@ describe("state + config path candidates", () => {
     const resolvedHome = path.resolve(home);
     const candidates = resolveDefaultConfigCandidates({} as NodeJS.ProcessEnv, () => home);
     const expected = [
+      path.join(resolvedHome, ".openagent", "openagent.json"),
+      path.join(resolvedHome, ".openagent", "openclaw.json"),
+      path.join(resolvedHome, ".openagent", "clawdbot.json"),
+      path.join(resolvedHome, ".openagent", "moltbot.json"),
+      path.join(resolvedHome, ".openagent", "moldbot.json"),
+      path.join(resolvedHome, ".openclaw", "openagent.json"),
       path.join(resolvedHome, ".openclaw", "openclaw.json"),
       path.join(resolvedHome, ".openclaw", "clawdbot.json"),
       path.join(resolvedHome, ".openclaw", "moltbot.json"),
       path.join(resolvedHome, ".openclaw", "moldbot.json"),
+      path.join(resolvedHome, ".clawdbot", "openagent.json"),
       path.join(resolvedHome, ".clawdbot", "openclaw.json"),
       path.join(resolvedHome, ".clawdbot", "clawdbot.json"),
       path.join(resolvedHome, ".clawdbot", "moltbot.json"),
       path.join(resolvedHome, ".clawdbot", "moldbot.json"),
+      path.join(resolvedHome, ".moltbot", "openagent.json"),
       path.join(resolvedHome, ".moltbot", "openclaw.json"),
       path.join(resolvedHome, ".moltbot", "clawdbot.json"),
       path.join(resolvedHome, ".moltbot", "moltbot.json"),
       path.join(resolvedHome, ".moltbot", "moldbot.json"),
+      path.join(resolvedHome, ".moldbot", "openagent.json"),
       path.join(resolvedHome, ".moldbot", "openclaw.json"),
       path.join(resolvedHome, ".moldbot", "clawdbot.json"),
       path.join(resolvedHome, ".moldbot", "moltbot.json"),
@@ -94,10 +103,10 @@ describe("state + config path candidates", () => {
     expect(candidates).toEqual(expected);
   });
 
-  it("prefers ~/.openclaw when it exists and legacy dir is missing", async () => {
+  it("prefers ~/.openagent when it exists and legacy dir is missing", async () => {
     const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-state-"));
     try {
-      const newDir = path.join(root, ".openclaw");
+      const newDir = path.join(root, ".openagent");
       await fs.mkdir(newDir, { recursive: true });
       const resolved = resolveStateDir({} as NodeJS.ProcessEnv, () => root);
       expect(resolved).toBe(newDir);
@@ -190,7 +199,24 @@ describe("state + config path candidates", () => {
       const overrideDir = path.join(root, "override");
       const env = { OPENCLAW_STATE_DIR: overrideDir } as NodeJS.ProcessEnv;
       const resolved = resolveConfigPath(env, overrideDir, () => root);
-      expect(resolved).toBe(path.join(overrideDir, "openclaw.json"));
+      expect(resolved).toBe(path.join(overrideDir, "openagent.json"));
+    } finally {
+      await fs.rm(root, { recursive: true, force: true });
+    }
+  });
+
+  it("resolves legacy ~/.openclaw before migration and OPENAGENT_STATE_DIR after migration", async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "openagent-state-"));
+    try {
+      const legacyDir = path.join(root, ".openclaw");
+      await fs.mkdir(legacyDir, { recursive: true });
+      const resolved = resolveStateDir({} as NodeJS.ProcessEnv, () => root);
+      expect(resolved).toBe(legacyDir);
+
+      const openagentEnv = {
+        OPENAGENT_STATE_DIR: path.join(root, ".openagent"),
+      } as NodeJS.ProcessEnv;
+      expect(resolveStateDir(openagentEnv, () => root)).toBe(path.join(root, ".openagent"));
     } finally {
       await fs.rm(root, { recursive: true, force: true });
     }
