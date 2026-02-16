@@ -37,4 +37,27 @@ describe("tool approval manager", () => {
       manager.consumeApprovalToken(token, { toolName: "exec", params: { cmd: "echo other" } }),
     ).toBe(false);
   });
+
+  it("keeps the request pending until an operator decision arrives", async () => {
+    const manager = new ToolApprovalManager();
+    const payload = { toolName: "exec", params: { cmd: "echo wait" } };
+
+    const pending = manager.requestApproval(payload, "needs approval", 2_000);
+    const [request] = manager.listPendingApprovals();
+    expect(request?.payload.toolName).toBe("exec");
+
+    setTimeout(() => {
+      manager.decideApproval({ requestId: request.requestId, approved: true });
+    }, 20);
+
+    await expect(pending).resolves.toMatchObject({ approved: true });
+  });
+
+  it("times out when no decision is provided", async () => {
+    const manager = new ToolApprovalManager();
+    const payload = { toolName: "exec", params: { cmd: "echo timeout" } };
+
+    const result = await manager.requestApproval(payload, "needs approval", 10);
+    expect(result).toEqual({ approved: false, reason: "approval_timeout" });
+  });
 });
