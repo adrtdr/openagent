@@ -2,13 +2,8 @@
 
 <p align="center">
     <picture>
-        <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/adrtdr/openagent/main/docs/assets/openclaw-logo-text-dark.png">
-        <img src="https://raw.githubusercontent.com/adrtdr/openagent/main/docs/assets/openclaw-logo-text.png" alt="OpenAgent" width="500">
+        <img src="docs/assets/openagent-logo-text.svg" alt="OpenAgent" width="500">
     </picture>
-</p>
-
-<p align="center">
-  <strong>EXFOLIATE! EXFOLIATE!</strong>
 </p>
 
 <p align="center">
@@ -482,22 +477,3 @@ Use these when you’re past the onboarding flow and want the deeper reference.
 ## Email hooks (Gmail)
 
 - [docs.openclaw.ai/gmail-pubsub](https://docs.openclaw.ai/automation/gmail-pubsub)
-
-## Molty
-
-OpenAgent was built for **Molty**, a space lobster AI assistant. 🦞
-by Peter Steinberger and the community.
-
-- [openclaw.ai](https://openclaw.ai)
-- [soul.md](https://soul.md)
-- [steipete.me](https://steipete.me)
-- [@openagent](https://x.com/openagent)
-
-## Community
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines, maintainers, and how to submit PRs.
-AI/vibe-coded PRs welcome! 🤖
-
-Special thanks to [Mario Zechner](https://mariozechner.at/) for his support and for
-[pi-mono](https://github.com/badlogic/pi-mono).
-Special thanks to Adam Doppelt for lobster.bot.
