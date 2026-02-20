@@ -2,7 +2,7 @@
 
 <p align="center">
     <picture>
-        <img src="docs/assets/openagent-logo-text.svg" alt="OpenAgent" width="500">
+        <img src="openagent-spec/assets/logo_wordmark.svg" alt="OpenAgent" width="500">
     </picture>
 </p>
 
